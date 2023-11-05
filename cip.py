@@ -9,7 +9,10 @@ import hashlib
 import os
 import pandas as pd
 import configparser
-   
+import html.entities
+
+acentos = {k: '&{};'.format(v) for k, v in html.entities.codepoint2name.items()}
+
 def variaveis():
     # Lê arquivo de configuração
     arqini = '../IrP_CIP_dados/cip.ini'
@@ -36,6 +39,9 @@ def gera_cip(var_ini):
     # Faz a leitura do arquivo CSV com os dados
     cadastro = pd.read_csv(arq_csv)
     
+    # Define variável com lista de membros de saída
+    lista_membros = {}
+    
     for ind in cadastro.index:
         # Separa os dados que serão incluídos no CIP
         # Data de cadastro
@@ -45,8 +51,6 @@ def gera_cip(var_ini):
         # Número do CIP
         cip_num = str(int(cadastro['CIP'][ind]))
         
-        print(cip_num,cip_nome,cip_data)
-
         # Define o hash de cada pessoa
         cip_codigo = hashlib.md5((chave + cip_num).encode('utf-8')).hexdigest()
         
@@ -167,26 +171,26 @@ require valid-user""".format(arq_htaccess=var_ini['cip']['arq_htaccess'])
                     
             </body>
         </html>""".format(
-        v1=cadastro['Nome completo'][ind],
-        v2 = cadastro['Endereço residencial (rua, número, apto., bairro)'][ind],
-        v3 = cadastro['Cidade de residência'][ind],
-        v4 = cadastro['Estado de residência'][ind],
+        v1=cadastro['Nome completo'][ind].translate(acentos),
+        v2 = cadastro['Endereço residencial (rua, número, apto., bairro)'][ind].translate(acentos),
+        v3 = cadastro['Cidade de residência'][ind].translate(acentos),
+        v4 = cadastro['Estado de residência'][ind].translate(acentos),
         v5 = cadastro['CEP de residência'][ind],
         v6 = cadastro['Celular com DDD'][ind],
         v7 = cadastro['Endereço de e-mail'][ind],
-        v8 = cadastro['Profissão'][ind],
-        v9 = cadastro['Endereços de contas em redes sociais (Facebook, LinkedIn, Twitter, Instagram, etc.)'][ind],
+        v8 = cadastro['Profissão'][ind].translate(acentos),
+        v9 = cadastro['Endereços de contas em redes sociais (Facebook, LinkedIn, Twitter, Instagram, etc.)'][ind].translate(acentos),
         v10 = cadastro['Ativo ou adormecido?'][ind],
         v11 = cadastro['Grau'][ind],
         v12 = cadastro['Mestre Instalado?'][ind],
         v13 = cadastro['CIM'][ind],
-        v14 = cadastro['Nome e número da Loja (se adormecido, a Loja mais recente)'][ind],
-        v15 = cadastro['Rito'][ind],
-        v16 = cadastro['Potência/Obediência'][ind],
-        v17 = cadastro['Cidade e estado da Loja (Oriente)'][ind],
-        v18 = cadastro['Endereço da Loja'][ind],
-        v19 = cadastro['Site ou rede social da Loja (se houver)'][ind],
-        v20 = cadastro['Dias das sessões'][ind],
+        v14 = cadastro['Nome e número da Loja (se adormecido, a Loja mais recente)'][ind].translate(acentos),
+        v15 = cadastro['Rito'][ind].translate(acentos),
+        v16 = cadastro['Potência/Obediência'][ind].translate(acentos),
+        v17 = cadastro['Cidade e estado da Loja (Oriente)'][ind].translate(acentos),
+        v18 = cadastro['Endereço da Loja'][ind].translate(acentos),
+        v19 = str(cadastro['Site ou rede social da Loja (se houver)'][ind]).translate(acentos),
+        v20 = cadastro['Dias das sessões'][ind].translate(acentos),
         form_atualiza=var_ini['cip']['form_atualiza']
         )
 
@@ -196,6 +200,9 @@ require valid-user""".format(arq_htaccess=var_ini['cip']['arq_htaccess'])
         with open(dir_pessoal + '/' + cip_num + '.html', 'w') as f:
             f.write(arq_cadastro)
         
+        print(str(cip_num) + ',' + cadastro['Apelido'][ind] + ',' + 
+              cip_nome + ',' + url + ',' + str(cadastro['Senha'][ind]) + ',' + 
+              cadastro['Celular com DDD'][ind])
 
 if __name__ == '__main__':
     gera_cip(variaveis())
