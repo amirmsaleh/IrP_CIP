@@ -10,6 +10,7 @@ import os
 import pandas as pd
 import configparser
 import html.entities
+import subprocess
 
 acentos = {k: '&{};'.format(v) for k, v in html.entities.codepoint2name.items()}
 
@@ -40,7 +41,8 @@ def gera_cip(var_ini):
     cadastro = pd.read_csv(arq_csv)
     
     # Define variável com lista de membros de saída
-    lista_membros = {}
+    lista_membros = []
+    lista_htpasswd = []
     
     for ind in cadastro.index:
         # Separa os dados que serão incluídos no CIP
@@ -179,31 +181,65 @@ require valid-user""".format(arq_htaccess=var_ini['cip']['arq_htaccess'])
         v6 = cadastro['Celular com DDD'][ind],
         v7 = cadastro['Endereço de e-mail'][ind],
         v8 = cadastro['Profissão'][ind].translate(acentos),
-        v9 = cadastro['Endereços de contas em redes sociais (Facebook, LinkedIn, Twitter, Instagram, etc.)'][ind].translate(acentos),
+        v9 = str(cadastro['Endereços de contas em redes sociais (Facebook, LinkedIn, Twitter, Instagram, etc.)'][ind]).translate(acentos),
         v10 = cadastro['Ativo ou adormecido?'][ind],
         v11 = cadastro['Grau'][ind],
         v12 = cadastro['Mestre Instalado?'][ind],
         v13 = cadastro['CIM'][ind],
-        v14 = cadastro['Nome e número da Loja (se adormecido, a Loja mais recente)'][ind].translate(acentos),
+        v14 = str(cadastro['Nome e número da Loja (se adormecido, a Loja mais recente)'][ind]).translate(acentos),
         v15 = cadastro['Rito'][ind].translate(acentos),
         v16 = cadastro['Potência/Obediência'][ind].translate(acentos),
         v17 = cadastro['Cidade e estado da Loja (Oriente)'][ind].translate(acentos),
-        v18 = cadastro['Endereço da Loja'][ind].translate(acentos),
+        v18 = str(cadastro['Endereço da Loja'][ind]).translate(acentos),
         v19 = str(cadastro['Site ou rede social da Loja (se houver)'][ind]).translate(acentos),
-        v20 = cadastro['Dias das sessões'][ind].translate(acentos),
+        v20 = str(cadastro['Dias das sessões'][ind]).translate(acentos),
         form_atualiza=var_ini['cip']['form_atualiza']
         )
 
         if cadastro['Ativo'][ind] != 'Sim':
+            # Se for inativo zera o arquivo de cadastro
             arq_cadastro = "INATIVO"
+        else:
+            # Gera lista para mala direta excluindo os inativos
+            #######################
+            ######################
+            celular = cadastro['Celular com DDD'][ind]
+            for character in '!?':
+            a_string = a_string.replace(character, '')
+            celular = celular.replace('(', '')
+            # Gera lista para mala direta excluindo os inativos
+            lista_membros.append([cip_num, cadastro['Apelido'][ind], 
+                                  cip_nome, url, cadastro['Senha'][ind],
+                                  cadastro['Celular com DDD'][ind]])
             
         with open(dir_pessoal + '/' + cip_num + '.html', 'w') as f:
             f.write(arq_cadastro)
         
-        print(str(cip_num) + ',' + cadastro['Apelido'][ind] + ',' + 
-              cip_nome + ',' + url + ',' + str(cadastro['Senha'][ind]) + ',' + 
-              cadastro['Celular com DDD'][ind])
 
+                              
+        # Gera senhas para o htpasswd
+        apr1 = subprocess.run(["openssl", "passwd", "-apr1", str(cadastro['Senha'][ind])], capture_output=True, text=True)
+        lista_htpasswd.append(str(cip_num) + ':' + apr1.stdout.rstrip())
+        
+        # Mostra o andamento na tela
+        print(cip_num, cip_nome)
+
+    
+    # Gera arquivo CSV com a lista de membros
+    campos = ['CIP', 'Apelido', 'Nome', 'URL', 'Senha', 'Celular']
+    df = pd.DataFrame(lista_membros, columns = campos)
+    destino = var_ini['cip']['dir_dados'] + '/' + 'lista_membros.csv'
+    df.to_csv(destino, index = False)
+    print("Arquivo CSV:",destino)
+    
+    # Gera arquivo htpasswd
+    df = pd.DataFrame(lista_htpasswd)
+    destino = var_ini['cip']['dir_dados'] + '/' + 'htpasswd'
+    df.to_csv(destino, index = False, header = False)
+    print("Arquivo htpasswd:",destino)
+    
+    
+    
 if __name__ == '__main__':
     gera_cip(variaveis())
     
