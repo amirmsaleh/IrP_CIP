@@ -16,10 +16,19 @@ acentos = {k: '&{};'.format(v) for k, v in html.entities.codepoint2name.items()}
 
 def variaveis():
     # Lê arquivo de configuração
-    arqini = '../IrP_CIP_dados/cip.ini'
+    arqchave = '../IrP_CIP_dados/chave.ini'
+    arqini = 'cip.ini'
+    
     ini = configparser.ConfigParser(dict_type=dict)
     ini.read(arqini)
-    return ini._sections
+    
+    chave_ini = configparser.ConfigParser(dict_type=dict)
+    chave_ini.read(arqchave)
+    
+    var_ini = ini._sections
+    var_ini['cip']['chave'] = chave_ini['cip']['chave']
+    
+    return var_ini
 
 def gera_cip(var_ini):
     chave = var_ini['cip']['chave']
@@ -204,19 +213,17 @@ require valid-user""".format(arq_htaccess=var_ini['cip']['arq_htaccess'])
             #######################
             ######################
             celular = cadastro['Celular com DDD'][ind]
-            for character in '!?':
-            a_string = a_string.replace(character, '')
-            celular = celular.replace('(', '')
+            for caracter in '()- ':
+                celular = celular.replace(caracter, '')
             # Gera lista para mala direta excluindo os inativos
-            lista_membros.append([cip_num, cadastro['Apelido'][ind], 
-                                  cip_nome, url, cadastro['Senha'][ind],
-                                  cadastro['Celular com DDD'][ind]])
+            lista_membros.append([cip_num, cadastro['Tratamento'][ind], 
+                                  cadastro['Apelido'][ind], cip_nome, 
+                                  url, cadastro['Senha'][ind],
+                                  '55' + str(celular)])
             
         with open(dir_pessoal + '/' + cip_num + '.html', 'w') as f:
             f.write(arq_cadastro)
-        
 
-                              
         # Gera senhas para o htpasswd
         apr1 = subprocess.run(["openssl", "passwd", "-apr1", str(cadastro['Senha'][ind])], capture_output=True, text=True)
         lista_htpasswd.append(str(cip_num) + ':' + apr1.stdout.rstrip())
@@ -226,7 +233,7 @@ require valid-user""".format(arq_htaccess=var_ini['cip']['arq_htaccess'])
 
     
     # Gera arquivo CSV com a lista de membros
-    campos = ['CIP', 'Apelido', 'Nome', 'URL', 'Senha', 'Celular']
+    campos = ['CIP', 'Tratamento', 'Apelido', 'Nome', 'URL', 'Senha', 'Celular']
     df = pd.DataFrame(lista_membros, columns = campos)
     destino = var_ini['cip']['dir_dados'] + '/' + 'lista_membros.csv'
     df.to_csv(destino, index = False)
@@ -243,35 +250,3 @@ require valid-user""".format(arq_htaccess=var_ini['cip']['arq_htaccess'])
 if __name__ == '__main__':
     gera_cip(variaveis())
     
-
-# Gera senhas para uso no .htpasswd
-#
-# openssl passwd -apr1 8320
-#
-# Formato do .htpasswd:
-# 1000:$apr1$q0zgYVO4$db2AE3WnUl3euhKTozvJV1
-# 1001:$apr1$T9VVSX5w$kQw5ceuXL58ufdTKKEV2A.
-
-
-# -------------------------------------------------------
-#cadastro['Carimbo de data/hora'] = pd.to_datetime(cadastro['Carimbo de data/hora'], infer_datetime_format=True)
-
-
-
-# img1 = Image.open(arq_cip, 'r')
-# img1_w, img1_h = img1.size
-# img1_w = img1_w // 3
-# img1_h = img1_h // 3
-# img = img1.resize((img1_w,img1_h))
-# img_w, img_h = img.size
-# background = Image.new('RGB', (856,539), (255, 255, 255))
-# bg_w, bg_h = background.size
-# offset = ((bg_w - img_w) // 2, (bg_h - img_h) // 2)
-# background.paste(img, offset)
-
-# font = ImageFont.truetype("DroidSans.ttf", 25)
-
-# draw = ImageDraw.Draw(background)
-# draw.text((0, 0),"Nome da Pessoa",(0,0,0),font=font)
-
-# background.save('out.png')
