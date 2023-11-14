@@ -1,29 +1,26 @@
 #!/usr/bin/env python3
 # encoding: utf-8
 
-from PIL import Image
-from PIL import ImageFont
-from PIL import ImageDraw 
-import pyqrcodeng as qr
-import hashlib
-import os
+"""
+# maladireta.py
+Gera arquivo com mala direta
+
+Este arquivo é parte do programa IrP_CIP
+Para mais detalhes verifique os arquivos README e LICENSE
+
+Copyright (C) 2023 AMS
+"""
+
 import pandas as pd
-import configparser
 import html.entities
-import subprocess
+
+from mod.dados_ini import dados_ini
 
 acentos = {k: '&{};'.format(v) for k, v in html.entities.codepoint2name.items()}
 
-def variaveis():
-    # Lê arquivo de configuração
-    arqini = 'cip.ini'
+def gera_maladireta():
+    var_ini = dados_ini()
     
-    ini = configparser.ConfigParser(dict_type=dict)
-    ini.read(arqini)
-
-    return ini._sections
-
-def gera_maladireta(var_ini):
     # Faz a leitura do arquivo CSV com os dados
     cadastro = pd.read_csv(var_ini['cip']['arq_csv'])
     
@@ -58,5 +55,5 @@ def gera_maladireta(var_ini):
         
     
 if __name__ == '__main__':
-    gera_maladireta(variaveis())
+    gera_maladireta()
     
