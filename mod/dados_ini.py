@@ -9,7 +9,7 @@ Exemplo:
 
 from mod.dados_ini import dados_ini
 
-Este arquivo é parte do programa UltrixVox
+Este arquivo é parte do programa Irp_CIP
 Para mais detalhes verifique os arquivos README, NOTICE e LICENSE
 
 Copyright (C) 2023 Ultrix
@@ -26,4 +26,10 @@ def dados_ini():
     arqini = 'cip.ini'
     ini = configparser.ConfigParser(dict_type=dict)
     ini.read(arqini)
-    return ini._sections
+    
+    var_ini = ini._sections
+
+    # Lê arquivo que contém a chave    
+    ini.read(var_ini['cip']['arq_ini_chave'])
+  
+    return var_ini

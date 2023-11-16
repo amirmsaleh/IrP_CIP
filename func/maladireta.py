@@ -19,6 +19,18 @@ from mod.dados_ini import dados_ini
 acentos = {k: '&{};'.format(v) for k, v in html.entities.codepoint2name.items()}
 
 def gera_maladireta():
+    """
+    # gera_maladireta - Gera mala direta para uso com o ZapFácil 
+    
+    Gera o arquivo de mala direta no diretório que está em 
+    var_ini['cip']['dir_dados']/mala_direta.csv
+    
+    :param:
+
+    :return:
+    :rtype:
+    """
+    
     var_ini = dados_ini()
     
     # Faz a leitura do arquivo CSV com os dados
@@ -52,8 +64,5 @@ def gera_maladireta():
     destino = var_ini['cip']['dir_dados'] + '/' + 'mala_direta.csv'
     df.to_csv(destino, index = False)
     print("Arquivo CSV:",destino)
-        
     
-if __name__ == '__main__':
-    gera_maladireta()
     

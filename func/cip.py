@@ -8,29 +8,17 @@ import pyqrcodeng as qr
 import hashlib
 import os
 import pandas as pd
-import configparser
 import html.entities
 import subprocess
 
+from mod.dados_ini import dados_ini
+
 acentos = {k: '&{};'.format(v) for k, v in html.entities.codepoint2name.items()}
 
-def variaveis():
-    # Lê arquivo de configuração
-    arqchave = '../IrP_CIP_dados/chave.ini'
-    arqini = 'cip.ini'
+def gera_cip():
     
-    ini = configparser.ConfigParser(dict_type=dict)
-    ini.read(arqini)
+    var_ini = dados_ini()
     
-    chave_ini = configparser.ConfigParser(dict_type=dict)
-    chave_ini.read(arqchave)
-    
-    var_ini = ini._sections
-    var_ini['cip']['chave'] = chave_ini['cip']['chave']
-    
-    return var_ini
-
-def gera_cip(var_ini):
     chave = var_ini['cip']['chave']
     # URL para gerar o link
     url_base = var_ini['cip']['url_base']
@@ -182,7 +170,7 @@ require valid-user""".format(arq_htaccess=var_ini['cip']['arq_htaccess'])
                     
             </body>
         </html>""".format(
-        v1=cadastro['Nome completo'][ind].translate(acentos),
+        v1 = cadastro['Nome completo'][ind].translate(acentos),
         v2 = cadastro['Endereço residencial (rua, número, apto., bairro)'][ind].translate(acentos),
         v3 = cadastro['Cidade de residência'][ind].translate(acentos),
         v4 = cadastro['Estado de residência'][ind].translate(acentos),
@@ -235,7 +223,7 @@ require valid-user""".format(arq_htaccess=var_ini['cip']['arq_htaccess'])
     # Gera arquivo CSV com a lista de membros
     campos = ['CIP', 'Tratamento', 'Apelido', 'Nome', 'URL', 'Senha', 'Celular']
     df = pd.DataFrame(lista_membros, columns = campos)
-    destino = var_ini['cip']['dir_dados'] + '/' + 'lista_membros.csv'
+    destino = var_ini['cip']['dir_dados'] + '/' + 'cip_lista_membros.csv'
     df.to_csv(destino, index = False)
     print("Arquivo CSV:",destino)
     
@@ -246,7 +234,5 @@ require valid-user""".format(arq_htaccess=var_ini['cip']['arq_htaccess'])
     print("Arquivo htpasswd:",destino)
     
     
-    
-if __name__ == '__main__':
-    gera_cip(variaveis())
+
     
