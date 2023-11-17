@@ -1,7 +1,7 @@
 """
 # dados_cip.py
 
-Define as variáveis usadas no CIP
+Funções básicas para uso com o CIP
 
 Este arquivo é parte do programa Irp_CIP
 Para mais detalhes verifique os arquivos README, NOTICE e LICENSE
@@ -11,6 +11,7 @@ Copyright (C) 2023 Ultrix
 import hashlib
 
 from mod.dados_ini import dados_ini
+from urllib.request import urlretrieve
 
 def dados_cip(cip):       
     """Gera código hash e URL de cada usuário
@@ -31,3 +32,18 @@ def dados_cip(cip):
     retorno['url'] = var_ini['cip']['url_base'] + '/' + var_ini['cip']['url_base_dir'] + '/' + retorno['cip_codigo']
  
     return retorno
+
+def baixa_csv():       
+    """Baixa arquivo CSV com os dados gerais
+
+    :param: 
+      
+    :return:       
+    :rtype:
+    """
+
+    url = (dados_ini()['cip']['cadastro_geral'])
+    filename = dados_ini()['cip']['arq_csv']
+    urlretrieve(url, filename)
+
+

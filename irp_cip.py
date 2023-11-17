@@ -24,11 +24,11 @@ Processos disponíveis:
 
 import argparse
 import sys
-import json
 
 from func.maladireta import gera_maladireta
 from func.cip import gera_cip
 from func.individual import dados_admissao, dados_divulgacao
+from mod.dados_cip import baixa_csv
     
 def incorreto():
     # Mostra o docstring do início do código
@@ -36,6 +36,7 @@ def incorreto():
     sys.exit()      
 
 def main_parser():
+       
     parser = argparse.ArgumentParser(
                         # Mostra o docstring do início do código
                         description=__import__('__main__').__doc__,
@@ -52,19 +53,23 @@ def main_parser():
     args = parser.parse_args()
     
     if (args.processo == "maladireta"):
+        baixa_csv()
         gera_maladireta()
 
     elif (args.processo == "cip"):
+        baixa_csv()
         gera_cip()
 
     elif (args.processo == "dados_admissao"):
         if args.cip:
+            baixa_csv()
             dados_admissao(int(args.cip))
         else:
             incorreto()
                    
     elif (args.processo == "dados_divulgacao"):
         if args.cip:
+            baixa_csv()
             dados_divulgacao(int(args.cip))
         else:
             incorreto()   
