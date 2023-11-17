@@ -67,6 +67,30 @@ Ao entrar no grupo de WhatsApp, por favor faça uma breve apresentação.
                 )
               )
     
+        mensagem = ("""
+*NOVO MEMBRO DA IRMANDADE PROGRESSISTA*
+
+Caros IIr.'., a partir desse momento a Irmandade Progressista conta com mais um membro:
+
+Nome: *{}*
+CIP: {}
+Regional: {}
+Regional sob coordenação de: {}
+ 
+Cada um dos membros da Irmandade Progressista já recebeu os dados do novo Ir.'. através de mensagem particular.
+
+O Ir.'. foi convidado a participar deste grupo de WhatsApp, e entrará se julgar conveniente. 
+Lembrando que a participação em grupos de WhatsApp é opcional, e não é requisito para pertencimento à Irmandade Progressista.
+                   """)
+    
+        print (mensagem.format(
+               dados_membro['Nome completo'][ind],
+               cip,
+               dados_membro['Regional'][ind],
+               dados_membro['Coordenador regional'][ind]
+               )
+            )
+    
 def dados_divulgacao(cip):
     """
     # dados_admissão - Gera dados individuais para divulgação 
