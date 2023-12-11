@@ -8,6 +8,7 @@ Processos disponíveis:
 
   maladireta          cria arquivo CSV com mala direta dos cadastrados
   cip                 cria arquivos do CIP
+  ftp                 envia arquivos do CIP via FTP
   dados_admissao      mostra dados individuais de admissão
   dados_divulgacao    mostra dados individuais de divulgação
   
@@ -29,6 +30,7 @@ from func.maladireta import gera_maladireta
 from func.cip import gera_cip
 from func.individual import dados_admissao, dados_divulgacao
 from mod.dados_cip import baixa_csv
+from mod.envia_ftp import envia_ftp
     
 def incorreto():
     # Mostra o docstring do início do código
@@ -45,6 +47,7 @@ def main_parser():
     parser.add_argument('processo',
                 help='\"maladireta\"       gera CSV com mala direta | '
                      '\"cip\"              gera arquivos do CIP | '
+                     '\"ftp\"              envia arquivos do CIP via FTP | '                     
                      '\"dados_admissao\"   dados individuais de admissão | '
                      '\"dados_divulgacao\" dados individuais de divulgação | '
                      )
@@ -59,6 +62,9 @@ def main_parser():
     elif (args.processo == "cip"):
         baixa_csv()
         gera_cip()
+        
+    elif (args.processo == "ftp"):
+        envia_ftp()
 
     elif (args.processo == "dados_admissao"):
         if args.cip:

@@ -12,6 +12,7 @@ import html.entities
 import subprocess
 
 from mod.dados_ini import dados_ini
+from func.maladireta import gera_maladireta
 
 acentos = {k: '&{};'.format(v) for k, v in html.entities.codepoint2name.items()}
 
@@ -38,7 +39,7 @@ def gera_cip():
     cadastro = pd.read_csv(arq_csv)
     
     # Define variável com lista de membros de saída
-    lista_membros = []
+    # lista_membros = []
     lista_htpasswd = []
     
     for ind in cadastro.index:
@@ -83,7 +84,7 @@ def gera_cip():
         if cadastro['Ativo'][ind] != 'Sim': 
             # Zera URL de cadastro caso seja inativo
             url_atualiza = ""
-            largura, altura = img_base.size 
+            #largura, altura = img_base.size 
             font = ImageFont.truetype("DejaVuSans-Bold.ttf", 85)
             escreve.text((210, 200),'INATIVO',(255,0,0),font=font)
 
@@ -196,18 +197,6 @@ require valid-user""".format(arq_htaccess=var_ini['cip']['arq_htaccess'])
         if cadastro['Ativo'][ind] != 'Sim':
             # Se for inativo zera o arquivo de cadastro
             arq_cadastro = "INATIVO"
-        else:
-            # Gera lista para mala direta excluindo os inativos
-            #######################
-            ######################
-            celular = cadastro['Celular com DDD'][ind]
-            for caracter in '()- ':
-                celular = celular.replace(caracter, '')
-            # Gera lista para mala direta excluindo os inativos
-            lista_membros.append([cip_num, cadastro['Tratamento'][ind], 
-                                  cadastro['Apelido'][ind], cip_nome, 
-                                  url, cadastro['Senha'][ind],
-                                  '55' + str(celular)])
             
         with open(dir_pessoal + '/' + cip_num + '.html', 'w') as f:
             f.write(arq_cadastro)
@@ -218,14 +207,9 @@ require valid-user""".format(arq_htaccess=var_ini['cip']['arq_htaccess'])
         
         # Mostra o andamento na tela
         print(cip_num, cip_nome)
-
     
     # Gera arquivo CSV com a lista de membros
-    campos = ['CIP', 'Tratamento', 'Apelido', 'Nome', 'URL', 'Senha', 'Celular']
-    df = pd.DataFrame(lista_membros, columns = campos)
-    destino = var_ini['cip']['dir_dados'] + '/' + 'cip_lista_membros.csv'
-    df.to_csv(destino, index = False)
-    print("Arquivo CSV:",destino)
+    gera_maladireta()
     
     # Gera arquivo htpasswd
     df = pd.DataFrame(lista_htpasswd)

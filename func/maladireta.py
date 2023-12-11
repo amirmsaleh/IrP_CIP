@@ -15,6 +15,7 @@ import pandas as pd
 import html.entities
 
 from mod.dados_ini import dados_ini
+from mod.dados_cip import dados_cip
 
 acentos = {k: '&{};'.format(v) for k, v in html.entities.codepoint2name.items()}
 
@@ -42,27 +43,42 @@ def gera_maladireta():
     for ind in cadastro.index:
         # Gera lista para mala direta excluindo os inativos
         if cadastro['Ativo'][ind] == 'Sim':
+
+            # Formatação para o formato suportado pelo ZapFácil para discagem
             celular = cadastro['Celular com DDD'][ind]
             for caracter in '()- ':
                 celular = celular.replace(caracter, '')
+            
+            # O ZapFácil não suporta parênteses
+            celular_coord = cadastro['Celular do coordenador'][ind]
+            for caracter in '()':
+                celular_coord = celular_coord.replace(caracter, '')
+
+            num_cip = cadastro['CIP'][ind]
+
             # Gera lista para mala direta
-            lista_membros.append([cadastro['CIP'][ind],
-                                  cadastro['Tratamento'][ind], 
-                                  cadastro['Apelido'][ind],
-                                  cadastro['Nome completo'][ind], 
-                                  cadastro['Senha'][ind],
-                                  cadastro['Regional'][ind],
-                                  '55' + str(celular)])
+            lista_membros.append([
+                num_cip,                                 # CIP
+                cadastro['Tratamento'][ind],             # Tratamento
+                cadastro['Apelido'][ind],                # Apelido
+                cadastro['Nome completo'][ind],          # Nome
+                dados_cip(num_cip)['url'],               # URL
+                cadastro['Senha'][ind],                  # Senha
+                cadastro['Regional'][ind],               # Regional
+                cadastro['Coordenador regional'][ind],   # Coord_Regional
+                celular_coord,                           # Contato_Coord
+                '55' + str(celular),                     # Contato
+                ])           
             
         # Mostra o andamento na tela
-        print(cadastro['CIP'][ind], cadastro['Nome completo'][ind])
+        # print(cadastro['CIP'][ind], cadastro['Nome completo'][ind])
 
     
     # Gera arquivo CSV com a lista de membros
-    campos = ['CIP', 'Tratamento', 'Apelido', 'Nome', 'Senha', 'Regional', 'Celular']
+    campos = ['CIP', 'Tratamento', 'Apelido', 'Nome', 'URL', 'Senha',
+              'Regional', 'CoordRegional', 'ContatoCoord', 'Contato']
     df = pd.DataFrame(lista_membros, columns = campos)
     destino = var_ini['cip']['dir_dados'] + '/' + 'mala_direta.csv'
     df.to_csv(destino, index = False)
-    print("Arquivo CSV:",destino)
-    
+    print("Mala direta com", len(df), "registros:",destino)
     
