@@ -34,21 +34,27 @@ def envia_ftp():
     conn_ftp = FTP(dados['ftp']['host'],
                    dados['ftp']['username'],
                    dados['ftp']['password'])
+
+    print('cwd ' + dados['ftp']['dir'])
+    conn_ftp.cwd(dados['ftp']['dir'])
        
     def upload_ftp(path):
         files = os.listdir(path)
         os.chdir(path)
-        conn_ftp.cwd(dados['ftp']['dir'])
         for f in files:
-            print(path + r'/{}'.format(f))
+            # print(path + r'/{}'.format(f))
             if os.path.isfile(path + r'/{}'.format(f)):
                 fh = open(f, 'rb')
+                print('STOR %s' % f)
                 conn_ftp.storbinary('STOR %s' % f, fh)
                 fh.close()
             elif os.path.isdir(path + r'/{}'.format(f)):
+                print('mkd ' + f)
                 conn_ftp.mkd(f)
+                print('cwd ' + f)
                 conn_ftp.cwd(f)
                 upload_ftp(path + r'/{}'.format(f))
+        print('cwd ..')
         conn_ftp.cwd('..')
         os.chdir('..')
     upload_ftp(arquivos_cip)   
