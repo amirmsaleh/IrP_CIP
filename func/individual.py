@@ -55,6 +55,10 @@ Link entrar no grupo de WhatsApp _IrP - Notícias - Irmandade Progressista_:
 {}
 
 Ao entrar no grupo de WhatsApp, por favor faça uma breve apresentação.
+
+Abaixo está a estrutura da Irmandade Progressista. Assim que possível por favor faça a leitura.
+
+http://www.irmandadeprogressista.org/p/estrutura-da-irmandade-progressista.html
                     """)
                    
         print(mensagem.format(
