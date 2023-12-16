@@ -78,6 +78,7 @@ def gera_maladireta():
     campos = ['CIP', 'Tratamento', 'Apelido', 'Nome', 'URL', 'Senha',
               'Regional', 'CoordRegional', 'ContatoCoord', 'Contato']
     df = pd.DataFrame(lista_membros, columns = campos)
+    df.sort_values('Nome', ascending=True, inplace=True)
     destino = var_ini['cip']['dir_dados'] + '/' + 'mala_direta.csv'
     df.to_csv(destino, index = False)
     print("Mala direta com", len(df), "registros:",destino)
