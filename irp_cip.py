@@ -64,6 +64,8 @@ def main_parser():
         gera_cip()
         
     elif (args.processo == "ftp"):
+        baixa_csv()
+        gera_cip()
         envia_ftp()
 
     elif (args.processo == "dados_admissao"):

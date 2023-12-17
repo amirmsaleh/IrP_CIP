@@ -25,36 +25,38 @@ def envia_ftp():
 
     dados = dados_ini()
     
-    arquivos_cip = '/home/amir/dev/IrP_CIP_dados/cip' # dados['cip']['dir_saida']
+    arquivos_cip = dados['cip']['dir_saida']
  
-    print(arquivos_cip, dados['ftp']['host'], dados['ftp']['username'],
-          dados['ftp']['password'], dados['ftp']['dir'])
+    # print(arquivos_cip, dados['ftp']['host'], dados['ftp']['username'],
+    #      dados['ftp']['password'], dados['ftp']['dir'])
     
-
     conn_ftp = FTP(dados['ftp']['host'],
                    dados['ftp']['username'],
                    dados['ftp']['password'])
 
-    print('cwd ' + dados['ftp']['dir'])
+    f_htpasswd = open(dados['cip']['dir_dados'] + '/' + '.htpasswd', 'rb')
+    print('FTP: .htpasswd')
+    conn_ftp.storbinary('STOR .htpasswd', f_htpasswd)
+
     conn_ftp.cwd(dados['ftp']['dir'])
-       
+    
     def upload_ftp(path):
         files = os.listdir(path)
         os.chdir(path)
         for f in files:
-            # print(path + r'/{}'.format(f))
             if os.path.isfile(path + r'/{}'.format(f)):
                 fh = open(f, 'rb')
-                print('STOR %s' % f)
+                print(path + '/%s' % f)
                 conn_ftp.storbinary('STOR %s' % f, fh)
                 fh.close()
             elif os.path.isdir(path + r'/{}'.format(f)):
-                print('mkd ' + f)
-                conn_ftp.mkd(f)
-                print('cwd ' + f)
+                try:
+                    print('FTP:', f)
+                    conn_ftp.mkd(f)
+                except:
+                    print('FTP:', f, "já existe")
                 conn_ftp.cwd(f)
                 upload_ftp(path + r'/{}'.format(f))
-        print('cwd ..')
         conn_ftp.cwd('..')
         os.chdir('..')
     upload_ftp(arquivos_cip)   

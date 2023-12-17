@@ -213,7 +213,7 @@ require valid-user""".format(arq_htaccess=var_ini['cip']['arq_htaccess'])
     
     # Gera arquivo htpasswd
     df = pd.DataFrame(lista_htpasswd)
-    destino = var_ini['cip']['dir_dados'] + '/' + 'htpasswd'
+    destino = var_ini['cip']['dir_dados'] + '/' + '.htpasswd'
     df.to_csv(destino, index = False, header = False)
     print("Arquivo htpasswd:",destino)
     
