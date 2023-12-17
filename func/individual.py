@@ -158,13 +158,11 @@ def dados_divulgacao(cip):
                dados_membro['Coordenador regional'][ind] 
                + ' - ' + dados_membro['Celular do coordenador'][ind] + '.')
         print ('')
-        print ('Gostaria de pedir sua paciência e colaboração, pois como '
-               'sabemos, nas semanas recentes passamos por um processo de '
-               'reestruturação da comunicação interna e das coordenações '
-               'regionais. Estamos retomando agora as admissões, por isso ' 
-               'haverá uma certa frequência de novos candidatos nos próximos '
-               'dias.')
         print ('')
         
         for campo in campos:
-            print ('*' + campo + ":*",dados_membro[campo][ind])    
+            if str(dados_membro[campo][ind]) == 'nan':
+                dado = ' - '
+            else: 
+                dado = dados_membro[campo][ind] 
+            print ('*' + campo + ":*", dado)    
