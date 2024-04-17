@@ -57,6 +57,12 @@ def gera_maladireta():
             num_cip = cadastro['CIP'][ind]
 
             # Gera lista para mala direta
+            contato = False
+            if str(celular)[0] == '+':
+                contato = str(celular)[1:]
+            else:
+                contato = '55' + str(celular)
+    
             lista_membros.append([
                 num_cip,                                 # CIP
                 cadastro['Tratamento'][ind],             # Tratamento
@@ -67,7 +73,7 @@ def gera_maladireta():
                 cadastro['Regional'][ind],               # Regional
                 cadastro['Coordenador regional'][ind],   # Coord_Regional
                 celular_coord,                           # Contato_Coord
-                '55' + str(celular),                     # Contato
+                contato,                                 # Contato
                 ])           
             
         # Mostra o andamento na tela
