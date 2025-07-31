@@ -142,22 +142,20 @@ def dados_divulgacao(cip):
                 'Coordenador regional'] 
 
     for ind in dados_membro.index:
-        print ('*CANDIDATO À IRMANDADE PROGRESSISTA - ' 
-               + dados_membro["Nome completo"][ind] + '*')
+        print ('🔺')
+        print ('*CANDIDATO À IRMANDADE PROGRESSISTA*')
+        print (f"🔺 {dados_membro['Nome completo'][ind]}")
         print ('')
-        print ('{{tratamento}} {{apelido}}, {{periodo-dia}}.')
+        print ('{nome}, saudações progressistas.')
         print ('')
-        print ('Seguem abaixo os dados de *'
-               + dados_membro["Nome completo"][ind] + 
-               '*, que deseja fazer parte da Irmandade Progressista.')
+        print (f"Seguem abaixo os dados de *"
+               f"{dados_membro['Nome completo'][ind].strip()}*, que deseja fazer parte "
+               f"da Irmandade Progressista.")
         print ('')
-        print ('Caso haja algum óbice ou observação a ser feita, por favor '
-               'encaminhe à regional',
-               dados_membro['Regional'][ind] + ' da Irmandade Progressista, que '
-               'está sob os cuidados de',
-               dados_membro['Coordenador regional'][ind] 
-               + ' - ' + dados_membro['Celular do coordenador'][ind] + '.')
-        print ('')
+        print (f"Caso haja algum óbice ou observação a ser feita: "
+               f"Regional {dados_membro['Regional'][ind]}, aos cuidados de "
+               f"{dados_membro['Coordenador regional'][ind]} - "
+               f"{dados_membro['Celular do coordenador'][ind]}.")
         print ('')
         
         for campo in campos:
@@ -165,4 +163,6 @@ def dados_divulgacao(cip):
                 dado = ' - '
             else: 
                 dado = dados_membro[campo][ind] 
-            print ('*' + campo + ":*", dado)    
+            print ('*' + campo + ":*", dado)
+        print ('')
+        print  ('▪▪▪▪▪▪▪')
