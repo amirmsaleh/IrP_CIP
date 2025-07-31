@@ -157,7 +157,8 @@ def dados_divulgacao(cip):
                f"{dados_membro['Coordenador regional'][ind]} - "
                f"{dados_membro['Celular do coordenador'][ind]}.")
         print ('')
-        
+        print('🔺 ', end='')
+
         for campo in campos:
             if str(dados_membro[campo][ind]) == 'nan':
                 dado = ' - '
