@@ -75,6 +75,7 @@ def gera_maladireta():
                 cadastro['Coordenador regional'][ind],   # Coord_Regional
                 celular_coord,                           # Contato_Coord
                 contato,                                 # Contato
+                cadastro['Endereço de e-mail'][ind],	 # E-mail
             ])
 
             lista_membros_zapsimples.append([
@@ -83,7 +84,8 @@ def gera_maladireta():
                 # Campo Número: número do celular
                 contato,
                 # campo E-mail: URL
-                dados_cip(num_cip)['url'],
+                cadastro['Endereço de e-mail'][ind], # E-mail
+                # dados_cip(num_cip)['url'], # URL para acesso ao cartão CIP
                 # campo Var1: CIP
                 num_cip,
                 # campo Var2: senha
@@ -99,7 +101,7 @@ def gera_maladireta():
 
     # Gera arquivo CSV com a mala direta
     campos = ['CIP', 'Tratamento', 'Apelido', 'Nome', 'URL', 'Senha',
-              'Regional', 'CoordRegional', 'ContatoCoord', 'Contato']
+              'Regional', 'CoordRegional', 'ContatoCoord', 'Contato','Email']
     df = pd.DataFrame(lista_membros, columns = campos)
     df.sort_values('Nome', ascending=True, inplace=True)
     destino = var_ini['cip']['dir_dados'] + '/' + 'mala_direta.csv'

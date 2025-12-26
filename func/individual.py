@@ -143,19 +143,18 @@ def dados_divulgacao(cip):
 
     for ind in dados_membro.index:
         print ('🔺')
-        print ('*CANDIDATO À IRMANDADE PROGRESSISTA*')
-        print (f"🔺 {dados_membro['Nome completo'][ind]}")
+        print (f"Candidato à IrP: {dados_membro['Nome completo'][ind]}")
         print ('')
-        print ('{nome}, saudações progressistas.')
+        print ('{contactfield=title} {contactfield=firstname}, <br><br> Saudações progressistas.<br><br>')
         print ('')
-        print (f"Seguem abaixo os dados de *"
-               f"{dados_membro['Nome completo'][ind].strip()}*, que deseja fazer parte "
-               f"da Irmandade Progressista.")
+        print (f"Seguem abaixo os dados de <b>"
+               f"{dados_membro['Nome completo'][ind].strip()}</b>, que deseja fazer parte "
+               f"da Irmandade Progressista.<br><br>")
         print ('')
         print (f"Caso haja algum óbice ou observação a ser feita: "
                f"Regional {dados_membro['Regional'][ind]}, aos cuidados de "
                f"{dados_membro['Coordenador regional'][ind]} - "
-               f"{dados_membro['Celular do coordenador'][ind]}.")
+               f"{dados_membro['Celular do coordenador'][ind]}.<br><br>")
         print ('')
         print('🔺 ', end='')
 
@@ -164,6 +163,6 @@ def dados_divulgacao(cip):
                 dado = ' - '
             else: 
                 dado = dados_membro[campo][ind] 
-            print ('*' + campo + ":*", dado)
+            print ('<b>' + campo + ":</b>", dado, '<br>')
         print ('')
         print  ('▪▪▪▪▪▪▪')
