@@ -81,11 +81,9 @@ CIP: {}
 Regional: {}
 Regional sob coordenação de: {}
  
-Cada um dos membros da Irmandade Progressista já recebeu os dados do novo Ir.'. através de mensagem particular.
+Cada um dos membros da Irmandade Progressista já recebeu os dados do novo Ir.'. através do e-mail.
 
-O Ir.'. foi convidado a participar deste grupo de WhatsApp, e entrará se julgar conveniente. 
-Lembrando que a participação em grupos de WhatsApp é opcional, e não é requisito para pertencimento à Irmandade Progressista.
-                   """)
+O Ir.'. ingressante foi convidado a participar do grupo de WhatsApp _IrP - Notícias - Irmandade Progressista_, e entrará se julgar conveniente.                   """)
     
         print (mensagem.format(
                dados_membro['Nome completo'][ind],

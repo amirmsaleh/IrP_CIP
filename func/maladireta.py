@@ -100,10 +100,12 @@ def gera_maladireta():
         # print(cadastro['CIP'][ind], cadastro['Nome completo'][ind])
 
     # Gera arquivo CSV com a mala direta
-    campos = ['CIP', 'Tratamento', 'Apelido', 'Nome', 'URL', 'Senha',
-              'Regional', 'CoordRegional', 'ContatoCoord', 'Contato','Email']
+    # campos = ['CIP', 'Tratamento', 'Apelido', 'Nome', 'URL', 'Senha',
+    #           'Regional', 'CoordRegional', 'ContatoCoord', 'Contato','Email']
+    campos = ['Position', 'Title', 'First Name', 'Last Name', 'Website', 'Zip Code', 'City', 'Address Line 1', 'Address Line 2', 'Mobile','Email']
     df = pd.DataFrame(lista_membros, columns = campos)
-    df.sort_values('Nome', ascending=True, inplace=True)
+    # df.sort_values('Nome', ascending=True, inplace=True)
+    df.sort_values('First Name', ascending=True, inplace=True)
     destino = var_ini['cip']['dir_dados'] + '/' + 'mala_direta.csv'
     df.to_csv(destino, index = False)
     print("Mala direta com", len(df), "registros:",destino)
